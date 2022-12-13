@@ -1,0 +1,142 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect"
+     href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&display=swap" rel="stylesheet"> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Zen+Dots&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0%;
+        background-color: azure;
+        font-family: "Zen Dots", cursive;
+        /* font-family: 'La Belle Aurore', cursive; */
+      }
+    </style>
+  </head>
+  <body>
+  <div class="flex justify-center mt-16">
+      <div class="flex-col">
+        <h1 class="flex font-bold text-3xl">_URL _Shortner</h1>
+
+        <div class="flex justify-center flex-col">
+          <input
+            class="border-2 border-sky-500 skew-x-3 flex mt-16 bg-amber-100 grow h-10 w-96"
+            id="url_input"
+            type="text"
+          />
+          <button
+            style="color: navy"
+            class="justify-center font-bold text-l flex mt-8 bg-sky-500 hover:bg-sky-700 pr-4 pl-4 rounded text-black"
+            id="click"
+          >
+            Generate
+          </button>
+        </div>
+
+        <input
+          class="rounded text-black transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110
+           hover:bg-slate-500 hover:text-white duration-300 flex font-bold justify-center cursor-pointer 
+           flex mt-16 bg-slate-300 skew-x-1 grow h-10 w-96 drop-shadow-lg"
+          style="display: none"
+          id="shorturl"
+          type="text"
+          readonly
+        />
+
+        <button
+          class="justify-center cursor-pointer font-medium text-xl flex mt-4 pr-4 pl-4 rounded text-white bg-yellow-400 hover:bg-yellow-600"
+          style="display: none"
+          id="copy_url"
+        >
+          COPY
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let url_input = document.getElementById("url_input");
+      let alert = document.getElementById("alert");
+      let copy_url = document.getElementById("copy_url");
+      let shorturl = document.getElementById("shorturl");
+      let click = document.getElementById("click");
+
+      // copy short url
+
+      shorturl.addEventListener("click", (e) => {
+        e.preventDefault();
+        // redirect 
+        window.open(shorturl.value, "_blank");
+      });
+
+      copy_url.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        navigator.clipboard.writeText(shorturl.value);
+      });
+
+
+      // validate url 
+      const  validate = (_url) => {
+        try {
+          let check_url = new URL(_url);
+          if (
+            check_url.protocol !== "http:" &&
+            check_url.protocol !== "https:"
+          ) {
+            return false;
+          }
+            return true;
+        } catch (error) {
+          return false;
+        }
+      }
+      
+      // long url -->  short url
+      
+      click.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        let _url = url_input.value;
+
+        if (!validate(_url)) {
+          alert("Enter correct URL !!!");
+          return;
+        }
+
+        shorturl.style.display = "none";
+        copy_url.style.display = "none";
+
+        // fetch
+        fetch("http://localhost:8080/get", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url: url_input.value }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            let _url = data.message;
+            console.log("_url : ", _url);
+            if (_url === "url not entered") {
+              alert("enter something !!!");
+              return;
+            }
+            shorturl.style.display = "flex";
+            copy_url.style.display = "flex";
+            shorturl.value = _url;
+          });
+      });
+    </script>
+  </body>
+</html>

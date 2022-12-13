@@ -1,0 +1,50 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+  </head>
+  <body>
+    <h1>Welcome</h1>
+
+    <h1>------------------------------</h1>
+    <% if (locals.original_url) { %> <%= original_url  %> <% } %>
+    <h1>------------------------------</h1>
+    <% if (locals.short_url) { %> <%= short_url %> <% } %>
+
+    <input id="url_input" type="text">
+    <button id="click">click</button>
+    
+    <input id="shorturl" type="text">
+    
+    <script>
+
+        let url_input = document.getElementById("url_input");
+        let shorturl = document.getElementById("shorturl");
+        let click = document.getElementById('click');
+
+        click.addEventListener('click' , (e)=>{
+            e.preventDefault();
+
+            // fetch 
+          fetch('http://localhost:8080/get' , {
+            
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body : JSON.stringify({url : url_input.value})
+
+          }).then((res) => res.json())
+            .then((data) =>{
+                shorturl.value  = data
+            })
+
+        })
+        
+        
+    </script>
+    
+  </body>
+</html>
