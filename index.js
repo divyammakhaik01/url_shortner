@@ -51,7 +51,7 @@ app.post('/get' , async(req,res)=>{
         }else{
             let data = await shortURL.create({
                 original_url : url , 
-                short_url : `http://localhost:8080/${shortid.generate()}`
+                short_url : `https://urlshortner-production-4277.up.railway.app/${shortid.generate()}`
             })
 
             console.log(data);
@@ -79,7 +79,7 @@ app.get('/:id' , async(req,res)=>{
     try {
         const {id} = req.params;
         console.log(id);
-        let short_url = `http://localhost:8080/${id}`;
+        let short_url = `https://urlshortner-production-4277.up.railway.app/${id}`;
         const url_exist = await shortURL.findOne({short_url});
         console.log("url_exist " ,url_exist );
         if(!url_exist){
