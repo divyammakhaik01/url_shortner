@@ -19,7 +19,6 @@
         margin: 0%;
         background-color: azure;
         font-family: "Zen Dots", cursive;
-        /* font-family: 'La Belle Aurore', cursive; */
       }
     </style>
   </head>
@@ -117,7 +116,7 @@
         copy_url.style.display = "none";
 
         // fetch
-        fetch("http://localhost:8080/get", {
+        fetch("https://urlshortner-production-4277.up.railway.app/get", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
