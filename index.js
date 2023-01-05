@@ -3,9 +3,7 @@ const shortid = require('shortid')
 const db = require('./config/db');
 const shortURL = require('./model/url')
 const path = require('path')
-
 const app = express();
-
 const PORT = process.env.PORT ||  8080;
 
 app.use(express.static('public'))
@@ -18,6 +16,7 @@ app.use(express.urlencoded({extended:false}))
 app.set('views' ,path.join(__dirname , '/views'))
 app.set('view engine' , 'ejs')
 
+let URL = process.env.URL
 
 // routes
 
@@ -51,7 +50,7 @@ app.post('/get' , async(req,res)=>{
         }else{
             let data = await shortURL.create({
                 original_url : url , 
-                short_url : `https://urlshortner-production-4277.up.railway.app/${shortid.generate()}`
+                short_url : `${URL}/${shortid.generate()}`
             })
 
             console.log(data);
@@ -79,7 +78,7 @@ app.get('/:id' , async(req,res)=>{
     try {
         const {id} = req.params;
         console.log(id);
-        let short_url = `https://urlshortner-production-4277.up.railway.app/${id}`;
+        let short_url = `${URL}/${id}`;
         const url_exist = await shortURL.findOne({short_url});
         console.log("url_exist " ,url_exist );
         if(!url_exist){
@@ -99,13 +98,6 @@ app.get('/:id' , async(req,res)=>{
         })
     }
 })
-
-
-// app.use('/' , (req , res) => {
-//     return res.json({
-//         "status" : "true"
-//     })
-// })
 
 
 

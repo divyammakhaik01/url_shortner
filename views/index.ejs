@@ -69,6 +69,8 @@
       let shorturl = document.getElementById("shorturl");
       let click = document.getElementById("click");
 
+      var API_URL= '<%= process.env.URL%>';
+
       // copy short url
 
       shorturl.addEventListener("click", (e) => {
@@ -116,7 +118,7 @@
         copy_url.style.display = "none";
 
         // fetch
-        fetch("https://urlshortner-production-4277.up.railway.app/get", {
+        fetch(`${API_URL}/get`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
